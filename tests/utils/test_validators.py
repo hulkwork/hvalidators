@@ -1,6 +1,6 @@
 import unittest
 
-from utils import validators
+from utils import schema_validators
 
 
 
@@ -36,15 +36,15 @@ class TestValidators(unittest.TestCase):
         }
 
     def test_validation(self):
-        res = validators.get_validate(self.json_test, self.schema_test)
+        res = schema_validators.get_validate(self.json_test, self.schema_test)
         self.assertEquals(res, None)
 
     def test_nested(self):
-        res = validators.get_validate(self.json_test_object, self.schema_test_object)
+        res = schema_validators.get_validate(self.json_test_object, self.schema_test_object)
         self.assertEquals(res, None)
 
     def test_get_all_valide_schema(self):
-        schema_valide, errors = validators.get_all_valide_schema()
+        schema_valide, errors = schema_validators.get_all_valid_schema()
 
         self.assertEquals(schema_valide, {'schema_test': {u'type': u'object',
                                                           u'properties': {u'price': {u'type': u'number'},

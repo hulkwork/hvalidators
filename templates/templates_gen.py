@@ -1,4 +1,4 @@
-from utils import validators
+from utils import schema_validators
 
 
 

@@ -1,7 +1,7 @@
 import unittest
 
 from templates import templates_gen
-from utils import validators
+from utils import schema_validators
 
 
 # os.environ['FWA_ENV'] = os.path.abspath(__file__ + "/../../")
@@ -9,7 +9,7 @@ from utils import validators
 
 class Testtemplates(unittest.TestCase):
     def setUp(self):
-        self.schema_tests = validators._schema
+        self.schema_tests = schema_validators._schema
         self.input_item_type = {"type":"number","name":"price"}
     def test_templates_gen(self):
         print templates_gen.get_template_from_schema(self.schema_tests)

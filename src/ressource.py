@@ -1,22 +1,21 @@
-import json
-from datetime import datetime
-from flask import request, jsonify
-from utils import validators
+from importer import *
+from utils import schema_validators
+from utils import params_validators
 from conf import metadata
 
 meta = metadata.copy()
 
 def _params():
-    meta['date'] = datetime.now().strptime("%Y-%m-%d %H:%M:%S")
+    meta['date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     response_query = {}
-    schema, errors = validators.get_all_valide_schema()
-    params_available = {"default": {
-        "price": 2000,
-        "name": "Hulk"
-    }}
+    schema, errors = schema_validators.get_hazel_schema()
+    params_available,errors_params = params_validators.get_hazel_params()
+
     res = {
         "msg": "All params available",
+        "all-params-names" : params_available.keys(),
         "params": params_available,
+        "error-params" : errors_params,
         "meta" : meta
 
     }
@@ -54,12 +53,9 @@ def _params():
             }), 404
         try:
             post_data = json.loads(post_data)
-            validators.get_validate(post_data, schema_key)
+            schema_validators.get_validate(post_data, schema_key)
             response_query['params'] = post_data
-            response_query["meta"] = {
-                "date":
-                    datetime.now()
-            }
+            response_query["meta"] = meta
             return jsonify({}), 200
 
         except Exception, e:
@@ -74,10 +70,10 @@ def _params():
 
 
 def _schema():
-    meta['date'] = datetime.now().strptime("%Y-%m-%d %H:%M:%S")
+    meta['date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     response_query = {"meta":meta}
     if request.method == "GET":
-        schema, errors = validators.get_all_valide_schema()
+        schema, errors = schema_validators.get_hazel_schema()
         if request.args.get("name"):
             name = request.args.get("name")
             if name in schema:
@@ -116,7 +112,7 @@ def _schema():
             }), 403
         try:
             post_data_schema = json.loads(post_data_schema)
-            validators.Draft4Validator.check_schema(post_data_schema)
+            schema_validators.Draft4Validator.check_schema(post_data_schema)
             response_query['schema'] = post_data_schema
 
             return jsonify(response_query), 200
