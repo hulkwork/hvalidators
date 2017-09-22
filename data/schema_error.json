@@ -1,0 +1,7 @@
+{
+    "type": "object",
+    "properties": {
+        "price": {"type": "strong"},
+        "name": {"type": "string"}
+    }
+}
