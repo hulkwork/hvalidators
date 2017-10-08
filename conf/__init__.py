@@ -8,3 +8,13 @@ settings = {
     "hazelcast-adress" : {"node1":"localhost:5701"},
     "log-location" : "debug.log"
 }
+
+CONFIG_REDIS = {
+    "host":"localhost",
+    "port":6379
+
+}
+
+CONFIG_MONGO = {
+    "host" : "localhost"
+}
