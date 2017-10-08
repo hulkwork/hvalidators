@@ -24,10 +24,10 @@ curl localhost:5000/getSchema?name=schema1
 ``
 
 # Dockerfile
-- docker pull hazelcast/hazelcast or use redis docker pull redis
-- docker run -ti -p 5701:5701 hazelcast/hazelcast
-- docker build .
-- docker run -ti -p 5000:500 
+- ``docker pull hazelcast/hazelcast `` or use redis ``docker pull redis``
+- ``docker run -ti -p 5701:5701 hazelcast/hazelcast `` or ``docker run -ti -p 6379:6379 redis``
+- ``docker build .``
+- ``docker run -ti -p 5000:500`` 
 
 # Requirements
 -------------
