@@ -9,7 +9,7 @@ def _params():
     meta['date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     response_query = {}
     schema, errors = schema_validators.get_hazel_schema()
-    params_available,errors_params = params_validators.get_hazel_params()
+    params_available, errors_params = params_validators.get_hazel_params()
 
     res = {
         "msg": "All params available",
@@ -28,6 +28,7 @@ def _params():
                 res['params'] = params_available[name]
                 return jsonify(res), 200
             else:
+                del res["all-params-names"], res["params"], res["error-params"]
                 res["msg"] = "< %s >not found " % name
                 return jsonify(res), 404
         else:
