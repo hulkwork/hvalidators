@@ -12,6 +12,8 @@ KEY_META = 'meta'
 KEY_SCHEMA = "schemas"
 meta = metadata.copy()
 
+def response_time(t_past):
+    return (datetime.now()-t_past).total_seconds()
 
 def _params():
     t_now = datetime.now()
@@ -35,15 +37,15 @@ def _params():
             if name in params_available:
                 res[KEY_MESSAGE] = "%s found " % name
                 res[KEY_PARAMS] = params_available[name]
-                res[KEY_REPONSE_TIME] = (t_now - datetime.now()).total_seconds()
+                res[KEY_REPONSE_TIME] = response_time(t_past=t_now)
                 return jsonify(res), 200
             else:
                 del res[KEY_ALL_PARAMS], res[KEY_PARAMS], res[KEY_ERROR_PARAMS]
                 res[KEY_MESSAGE] = "< %s >not found " % name
-                res[KEY_REPONSE_TIME] = (t_now - datetime.now()).total_seconds()
+                res[KEY_REPONSE_TIME] = response_time(t_past=t_now)
                 return jsonify(res), 404
         else:
-            res[KEY_REPONSE_TIME] = (t_now - datetime.now()).total_seconds()
+            res[KEY_REPONSE_TIME] = response_time(t_past=t_now)
             return jsonify(res), 200
 
     elif request.method == "POST":
@@ -56,14 +58,14 @@ def _params():
                 return jsonify({
                     KEY_MESSAGE:
                         "Make sure your %s is schema define " % name,
-                    KEY_REPONSE_TIME: (t_now - datetime.now()).total_seconds()
+                    KEY_REPONSE_TIME: response_time(t_past=t_now)
 
                 }), 404
         else:
             return jsonify({
                 KEY_MESSAGE:
                     "Put a schema name ?name=<string>",
-                KEY_REPONSE_TIME: (t_now - datetime.now()).total_seconds()
+                KEY_REPONSE_TIME: response_time(t_past=t_now)
 
             }), 404
         try:
@@ -71,7 +73,7 @@ def _params():
             schema_validators.get_validate(post_data, schema_key)
             response_query['params'] = post_data
             response_query["meta"] = meta
-            response_query[KEY_REPONSE_TIME] = (t_now - datetime.now()).total_seconds()
+            response_query[KEY_REPONSE_TIME] = response_time(t_past=t_now)
             return jsonify(response_query), 200
 
         except Exception, e:
@@ -80,7 +82,7 @@ def _params():
                     "Make sure your json ",
                 "Exception":
                     str(e),
-                KEY_REPONSE_TIME: (t_now - datetime.now()).total_seconds()
+                KEY_REPONSE_TIME: response_time(t_past=t_now)
             }), 403
 
     return jsonify({}), 200
@@ -100,7 +102,7 @@ def _schema():
                         "<%s> schema found" % name,
                     KEY_SCHEMA:
                         schema[name],
-                    KEY_REPONSE_TIME: (t_now - datetime.now()).total_seconds()
+                    KEY_REPONSE_TIME: response_time(t_past=t_now)
                 })
                 return jsonify(response_query), 200
             else:
@@ -111,10 +113,10 @@ def _schema():
                 if name in errors:
                     response_query[KEY_MESSAGE] = "You schema %s is in error" % name
                     response_query['error'] = errors[name]
-                    response_query[KEY_REPONSE_TIME] = (t_now - datetime.now()).total_seconds()
+                    response_query[KEY_REPONSE_TIME] = response_time(t_past=t_now)
                     return jsonify(response_query), 500
                 else:
-                    response_query[KEY_REPONSE_TIME] = (t_now - datetime.now()).total_seconds()
+                    response_query[KEY_REPONSE_TIME] = response_time(t_past=t_now)
                     return jsonify(response_query), 404
         response_query.update({
             KEY_MESSAGE:
@@ -122,7 +124,7 @@ def _schema():
             KEY_SCHEMA:
                 schema,
             "error-schema": errors,
-            KEY_REPONSE_TIME: (t_now - datetime.now()).total_seconds()
+            KEY_REPONSE_TIME: response_time(t_past=t_now)
 
         })
         return jsonify(response_query), 200
@@ -132,13 +134,13 @@ def _schema():
             return jsonify({
                 KEY_MESSAGE:
                     "Make sure you put ?name=<string> ",
-                KEY_REPONSE_TIME: (t_now - datetime.now()).total_seconds()
+                KEY_REPONSE_TIME: response_time(t_past=t_now)
             }), 403
         try:
             post_data_schema = json.loads(post_data_schema)
             schema_validators.Draft4Validator.check_schema(post_data_schema)
             response_query[KEY_SCHEMA] = post_data_schema
-            response_query[KEY_REPONSE_TIME] = (t_now - datetime.now()).total_seconds()
+            response_query[KEY_REPONSE_TIME] = response_time(t_past=t_now)
 
             return jsonify(response_query), 200
 
@@ -148,8 +150,8 @@ def _schema():
                     "Make sure your json ",
                 "Exception":
                     str(e),
-                KEY_REPONSE_TIME: (t_now - datetime.now()).total_seconds()
+                KEY_REPONSE_TIME: response_time(t_past=t_now)
             })
             return jsonify(response_query), 403
-    response_query[KEY_REPONSE_TIME] = (t_now - datetime.now()).total_seconds()
+    response_query[KEY_REPONSE_TIME] = response_time(t_past=t_now)
     return jsonify(response_query), 200
